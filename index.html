@@ -4,22 +4,34 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Todo App</title>
-  <link rel="stylesheet" href="css/styles.css" />
+  <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
-  <div class="container">
-    <h1>Todo</h1>
+  <main class="app" aria-labelledby="app-title">
+    <h1 id="app-title">Todo</h1>
 
-    <form id="todo-form">
-      <input id="todo-input" type="text" placeholder="Add a new todo..." autocomplete="off" />
-      <button id="add-btn" type="submit">Add</button>
+    <form id="todo-form" class="todo-form" autocomplete="off">
+      <input id="todo-input" name="todo" type="text" placeholder="What needs to be done?" aria-label="New todo" />
+      <button type="submit" aria-label="Add todo">Add</button>
     </form>
 
-    <ul id="todo-list" class="todo-list"></ul>
+    <section class="todo-panel" aria-live="polite">
+      <ul id="todo-list" class="todo-list"></ul>
 
-    <p class="hint">Todos are stored in your browser (localStorage).</p>
-  </div>
+      <div class="todo-footer">
+        <span id="todo-count" class="todo-count">0 items left</span>
 
-  <script src="js/app.js"></script>
+        <div class="filters" role="tablist" aria-label="Filter todos">
+          <button class="filter-btn active" data-filter="all" role="tab" aria-selected="true">All</button>
+          <button class="filter-btn" data-filter="active" role="tab" aria-selected="false">Active</button>
+          <button class="filter-btn" data-filter="completed" role="tab" aria-selected="false">Completed</button>
+        </div>
+
+        <button id="clear-completed" class="clear-btn">Clear completed</button>
+      </div>
+    </section>
+  </main>
+
+  <script src="app.js" defer></script>
 </body>
 </html>
