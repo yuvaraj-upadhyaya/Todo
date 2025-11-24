@@ -1,0 +1,25 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Todo App</title>
+  <link rel="stylesheet" href="css/styles.css" />
+</head>
+<body>
+  <div class="container">
+    <h1>Todo</h1>
+
+    <form id="todo-form">
+      <input id="todo-input" type="text" placeholder="Add a new todo..." autocomplete="off" />
+      <button id="add-btn" type="submit">Add</button>
+    </form>
+
+    <ul id="todo-list" class="todo-list"></ul>
+
+    <p class="hint">Todos are stored in your browser (localStorage).</p>
+  </div>
+
+  <script src="js/app.js"></script>
+</body>
+</html>
