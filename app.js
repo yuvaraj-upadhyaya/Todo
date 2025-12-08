@@ -4,11 +4,14 @@
   clear completed, localStorage persistence, counts, keyboard support (Enter to add, Esc to cancel edit).
 */
 
+// Local storage key for persisting todos
 const STORAGE_KEY = 'todos_v1';
 
-let todos = [];
-let filter = 'all'; // 'all' | 'active' | 'completed'
+// Application state
+let todos = [];  // Array of todo objects
+let filter = 'all'; // Current filter: 'all' | 'active' | 'completed'
 
+// Cache DOM elements for quick access
 const elements = {
   form: document.getElementById('todo-form'),
   input: document.getElementById('todo-input'),
@@ -17,23 +20,26 @@ const elements = {
   filters: document.querySelectorAll('.filter-btn'),
   clearBtn: document.getElementById('clear-completed')
 };
-
 function uid() {
   return Date.now().toString(36) + Math.random().toString(36).slice(2,7);
 }
 
+// Save todos to local storage
 function save() {
   localStorage.setItem(STORAGE_KEY, JSON.stringify(todos));
 }
 
+// Load todos from local storage
+function load() {
 function load() {
   try {
     const raw = localStorage.getItem(STORAGE_KEY);
     todos = raw ? JSON.parse(raw) : [];
-  } catch {
-    todos = [];
   }
 }
+
+// Add a new todo to the beginning of the list
+function addTodo(text) {
 
 function addTodo(text) {
   if (!text || !text.trim()) return;
@@ -43,79 +49,87 @@ function addTodo(text) {
     completed: false,
     createdAt: Date.now()
   });
-  save();
   render();
 }
 
+// Toggle the completed status of a todo
+function toggleTodo(id) {
 function toggleTodo(id) {
   const t = todos.find(x => x.id === id);
   if (!t) return;
-  t.completed = !t.completed;
-  save();
   render();
 }
 
+// Remove a todo from the list
 function deleteTodo(id) {
-  todos = todos.filter(x => x.id !== id);
-  save();
+
+function deleteTodo(id) {
   render();
 }
+
+// Remove all completed todos
+function clearCompleted() {
 
 function clearCompleted() {
   todos = todos.filter(t => !t.completed);
-  save();
   render();
 }
 
+// Update the text content of a todo
+function updateTodoText(id, newText) {
 function updateTodoText(id, newText) {
   const t = todos.find(x => x.id === id);
   if (!t) return;
-  t.text = newText.trim();
-  save();
   render();
 }
 
+// Return todos filtered based on the current filter setting
 function filteredTodos() {
-  if (filter === 'active') return todos.filter(t => !t.completed);
-  if (filter === 'completed') return todos.filter(t => t.completed);
+
+function filteredTodos() {
   return todos;
 }
+
+// Change the active filter and update UI
+function setFilter(newFilter) {
 
 function setFilter(newFilter) {
   filter = newFilter;
   elements.filters.forEach(btn => {
     btn.classList.toggle('active', btn.dataset.filter === newFilter);
-    btn.setAttribute('aria-selected', btn.dataset.filter === newFilter ? 'true' : 'false');
-  });
   render();
 }
 
+// Update the count display showing remaining active todos
 function updateCount() {
-  const activeCount = todos.filter(t => !t.completed).length;
+
   elements.count.textContent = `${activeCount} item${activeCount !== 1 ? 's' : ''} left`;
 }
 
+// Create a DOM element for a single todo item
 function createTodoNode(todo) {
-  const li = document.createElement('li');
   li.className = 'todo-item';
   li.dataset.id = todo.id;
+
+  // Create checkbox button for toggling completed state
+  const cb = document.createElement('button');
 
   // Checkbox
   const cb = document.createElement('button');
   cb.className = 'todo-checkbox' + (todo.completed ? ' checked' : '');
   cb.setAttribute('aria-label', todo.completed ? 'Mark as active' : 'Mark as completed');
   cb.title = cb.getAttribute('aria-label');
-  cb.type = 'button';
-  cb.addEventListener('click', () => toggleTodo(todo.id));
   cb.innerHTML = todo.completed ? '✓' : '';
 
+  // Create editable label for the todo text
+  const label = document.createElement('div');
   // Label (editable)
   const label = document.createElement('div');
   label.className = 'todo-label' + (todo.completed ? ' completed' : '');
-  label.textContent = todo.text;
-  label.title = 'Double-click to edit';
   label.addEventListener('dblclick', () => startEdit(li, todo));
 
+  // Create action buttons container (delete)
+  const actions = document.createElement('div');
   // Actions (delete)
   const actions = document.createElement('div');
   actions.className = 'todo-actions';
@@ -132,10 +146,11 @@ function createTodoNode(todo) {
   li.appendChild(cb);
   li.appendChild(label);
   li.appendChild(actions);
-
   return li;
 }
 
+// Enable inline editing mode for a todo item
+function startEdit(listItem, todo) {
 function startEdit(listItem, todo) {
   const label = listItem.querySelector('.todo-label');
   const input = document.createElement('input');
@@ -174,16 +189,18 @@ function startEdit(listItem, todo) {
     input.removeEventListener('keydown', onKey);
     input.removeEventListener('blur', onBlur);
   }
-
-  input.addEventListener('keydown', onKey);
   input.addEventListener('blur', onBlur);
 }
 
+// Render the todo list based on current filter and todos
 function render() {
-  // Clear list
+  // Clear the existing list
   elements.list.innerHTML = '';
 
   const list = filteredTodos();
+
+  // Display empty state if no todos match the filter
+  if (list.length === 0) {os();
 
   if (list.length === 0) {
     const empty = document.createElement('li');
@@ -196,44 +213,45 @@ function render() {
   } else {
     for (const t of list) {
       elements.list.appendChild(createTodoNode(t));
-    }
-  }
-
   updateCount();
 }
 
+// Initialize the application
 function init() {
   load();
   render();
 
+  // Setup event listener for adding new todos via form submission
+  elements.form.addEventListener('submit', (e) => {
+
   // Form submit - add new todo
   elements.form.addEventListener('submit', (e) => {
-    e.preventDefault();
-    const value = elements.input.value;
-    addTodo(value);
-    elements.input.value = '';
     elements.input.focus();
   });
 
-  // Keyboard: Enter in input already handled by form; provide Esc to clear input
+  // Setup keyboard shortcut to clear input with Escape key
   elements.input.addEventListener('keydown', (e) => {
     if (e.key === 'Escape') elements.input.value = '';
   });
 
-  // Filter buttons
-  elements.filters.forEach(btn => {
-    btn.addEventListener('click', () => {
-      setFilter(btn.dataset.filter);
+  // Setup filter button event listeners
+  elements.filters.forEach(btn => {s.input.value = '';
+  });
+
     });
   });
 
-  // Clear completed
+  // Setup clear completed button event listener
   elements.clearBtn.addEventListener('click', () => {
     clearCompleted();
   });
 
-  // Accessibility: allow toggling by pressing Enter on checkbox element (it is a button so works)
-  // Save on unload (already saved on mutations, but keep a fallback)
+  // Fallback: save todos before page unload
+  window.addEventListener('beforeunload', save);
+}
+
+// Start the application
+init();ve on unload (already saved on mutations, but keep a fallback)
   window.addEventListener('beforeunload', save);
 }
 
