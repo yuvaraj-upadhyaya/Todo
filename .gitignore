@@ -1,0 +1,43 @@
+# Node modules
+node_modules/
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+logs/
+*.log
+
+# Dependency directories
+dist/
+build/
+coverage/
+
+# Environment
+.env
+.env.local
+.env.*.local
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# IDE / Editor directories
+.vscode/
+.idea/
+*.sublime-workspace
+*.sublime-project
+
+# Lockfiles (optional to ignore)
+package-lock.json
+yarn.lock
+
+# Misc
+*.tgz
+.cache/
+*.bak
+*.swp
+.history
+
+# Windows thumbnail cache
+Thumbs.db

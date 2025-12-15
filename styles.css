@@ -237,6 +237,16 @@ h1 {
   transform: scale(1.1);
 }
 
+/* Specific styling for edit icon button to avoid delete hover color */
+.icon-btn.edit-btn {
+  color: var(--text-secondary);
+}
+.icon-btn.edit-btn:hover {
+  background: rgba(59, 130, 246, 0.08);
+  color: var(--primary-dark);
+  transform: scale(1.06);
+}
+
 /* Todo panel */
 .todo-panel {
   animation: fadeIn 0.3s ease;

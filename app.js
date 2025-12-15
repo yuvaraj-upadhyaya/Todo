@@ -148,6 +148,15 @@ function createTodoNode(todo) {
   delBtn.innerHTML = "🗑";
   delBtn.addEventListener("click", () => deleteTodo(todo.id));
 
+  // Edit button (inline edit) - click to enter edit mode
+  const editBtn = document.createElement("button");
+  editBtn.className = "icon-btn edit-btn";
+  editBtn.title = "Edit";
+  editBtn.type = "button";
+  editBtn.innerHTML = "✎";
+  editBtn.addEventListener("click", () => startEdit(li, todo));
+
+  actions.appendChild(editBtn);
   actions.appendChild(delBtn);
 
   li.appendChild(cb);
