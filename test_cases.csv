@@ -1,0 +1,11 @@
+Test Case ID,Test Scenario,Test Steps,Expected Result,Pass/Fail
+TC001,Add New Todo,"1. Enter 'Buy Milk' in input field. 2. Press Enter.","New task 'Buy Milk' is added to the list.",
+TC002,Add Empty Todo,"1. Leave input field empty. 2. Press Enter.","No new task is added.",
+TC003,Mark as Complete,"1. Click the checkbox next to an active task.","Task is crossed out and marked as completed.",
+TC004,Unmark Task,"1. Click the checkbox next to a completed task.","Task is no longer crossed out and is marked as active.",
+TC005,Filter Active,"1. Click 'Active' filter button.","Only active tasks are visible. Completed tasks are hidden.",
+TC006,Filter Completed,"1. Click 'Completed' filter button.","Only completed tasks are visible. Active tasks are hidden.",
+TC007,Clear Completed,"1. Click 'Clear completed' button.","All completed tasks are removed from the list.",
+TC008,Delete Todo,"1. Hover over a task. 2. Click the delete (trash) icon.","Task is removed from the list.",
+TC009,Edit Todo,"1. Double-click on a task text. 2. Edit text. 3. Press Enter.","Task text is updated.",
+TC010,Data Persistence,"1. Add a task. 2. Reload the page.","Task remains in the list after reload.",

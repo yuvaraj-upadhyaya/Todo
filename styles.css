@@ -4,22 +4,30 @@
 
 /* CSS custom properties for consistent theming */
 :root {
-  --primary: #3b82f6;
-  --primary-light: #60a5fa;
-  --primary-dark: #1d4ed8;
+  --primary: #6366f1;
+  --primary-light: #818cf8;
+  --primary-dark: #4f46e5;
+  --accent: #ec4899;
+  --accent-light: #f472b6;
   --success: #10b981;
+  --success-light: #34d399;
   --danger: #ef4444;
   --warning: #f59e0b;
-  --bg-light: #f9fafb;
+  --bg-light: #faf5ff;
   --bg: #ffffff;
-  --text-primary: #1f2937;
-  --text-secondary: #6b7280;
-  --border: #e5e7eb;
-  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
-  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-  --shadow-lg: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
-  --radius: 8px;
+  --text-primary: #1e293b;
+  --text-secondary: #64748b;
+  --border: #e2e8f0;
+  --shadow-sm: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+  --shadow-md: 0 10px 15px -3px rgba(0, 0, 0, 0.1),
+    0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  --shadow-lg: 0 20px 25px -5px rgba(0, 0, 0, 0.1),
+    0 10px 10px -5px rgba(0, 0, 0, 0.04);
+  --shadow-xl: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+  --radius: 12px;
+  --radius-sm: 8px;
   --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-fast: all 0.15s ease;
 }
 
 /* Global styles */
@@ -39,45 +47,148 @@ body {
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
     "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
     sans-serif;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+  background-size: 200% 200%;
+  animation: gradientShift 15s ease infinite;
   min-height: 100vh;
   color: var(--text-primary);
   display: flex;
   align-items: center;
   justify-content: center;
   padding: 20px;
+  position: relative;
+  overflow: hidden;
+}
+
+body::before {
+  content: "";
+  position: absolute;
+  width: 500px;
+  height: 500px;
+  background: radial-gradient(
+    circle,
+    rgba(255, 255, 255, 0.1) 0%,
+    transparent 70%
+  );
+  border-radius: 50%;
+  top: -250px;
+  right: -250px;
+  animation: float 20s ease-in-out infinite;
+}
+
+body::after {
+  content: "";
+  position: absolute;
+  width: 400px;
+  height: 400px;
+  background: radial-gradient(
+    circle,
+    rgba(255, 255, 255, 0.08) 0%,
+    transparent 70%
+  );
+  border-radius: 50%;
+  bottom: -200px;
+  left: -200px;
+  animation: float 15s ease-in-out infinite reverse;
+}
+
+@keyframes gradientShift {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+@keyframes float {
+  0%,
+  100% {
+    transform: translateY(0) rotate(0deg);
+  }
+  50% {
+    transform: translateY(-30px) rotate(10deg);
+  }
 }
 
 /* Main app container */
 .app {
   width: 100%;
   max-width: 600px;
-  background: var(--bg);
-  border-radius: var(--radius);
-  padding: 40px;
-  box-shadow: var(--shadow-lg);
-  animation: slideUp 0.5s ease;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(20px);
+  border-radius: 24px;
+  padding: 48px;
+  box-shadow: var(--shadow-xl), 0 0 0 1px rgba(255, 255, 255, 0.3);
+  animation: slideUp 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+  position: relative;
+  z-index: 1;
+}
+
+.app::before {
+  content: "";
+  position: absolute;
+  inset: -2px;
+  background: linear-gradient(
+    135deg,
+    rgba(99, 102, 241, 0.3),
+    rgba(236, 72, 153, 0.3)
+  );
+  border-radius: 24px;
+  z-index: -1;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.app:hover::before {
+  opacity: 1;
 }
 
 @keyframes slideUp {
   from {
     opacity: 0;
-    transform: translateY(30px);
+    transform: translateY(40px) scale(0.95);
   }
   to {
     opacity: 1;
-    transform: translateY(0);
+    transform: translateY(0) scale(1);
   }
 }
 
 /* Page title */
 h1 {
-  margin: 0 0 30px 0;
-  font-size: 32px;
-  font-weight: 700;
-  color: var(--primary);
+  margin: 0 0 36px 0;
+  font-size: 42px;
+  font-weight: 800;
+  background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
   text-align: center;
-  letter-spacing: -0.5px;
+  letter-spacing: -1px;
+  position: relative;
+  animation: titleGlow 3s ease-in-out infinite;
+}
+
+h1::after {
+  content: '';
+  position: absolute;
+  bottom: -12px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 60px;
+  height: 4px;
+  background: linear-gradient(90deg, var(--primary), var(--accent));
+  border-radius: 2px;
+  box-shadow: 0 2px 8px rgba(99, 102, 241, 0.3);
+}
+
+@keyframes titleGlow {
+  0%, 100% { filter: brightness(1); }
+  50% { filter: brightness(1.2); }
 }
 
 /* Form for adding new todos */
@@ -113,26 +224,45 @@ h1 {
 
 /* Submit button */
 .todo-form button {
-  padding: 12px 24px;
-  background: var(--primary);
+  padding: 12px 28px;
+  background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
   color: white;
   border: none;
   border-radius: var(--radius);
   font-size: 16px;
-  font-weight: 600;
+  font-weight: 700;
   cursor: pointer;
   transition: var(--transition);
-  box-shadow: var(--shadow-sm);
+  box-shadow: var(--shadow-md), 0 0 20px rgba(99, 102, 241, 0.3);
+  position: relative;
+  overflow: hidden;
+}
+
+.todo-form button::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, var(--primary-dark) 0%, var(--accent) 100%);
+  opacity: 0;
+  transition: opacity 0.3s ease;
 }
 
 .todo-form button:hover {
-  background: var(--primary-dark);
-  box-shadow: var(--shadow-md);
-  transform: translateY(-2px);
+  transform: translateY(-3px);
+  box-shadow: var(--shadow-lg), 0 0 30px rgba(99, 102, 241, 0.5);
+}
+
+.todo-form button:hover::before {
+  opacity: 1;
 }
 
 .todo-form button:active {
-  transform: translateY(0);
+  transform: translateY(-1px);
+}
+
+.todo-form button span {
+  position: relative;
+  z-index: 1;
 }
 
 /* Todo list container */
@@ -146,27 +276,47 @@ h1 {
 .todo-item {
   display: flex;
   align-items: center;
-  gap: 12px;
-  padding: 16px;
-  background: var(--bg-light);
+  gap: 14px;
+  padding: 18px 20px;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.9) 0%, rgba(250, 245, 255, 0.9) 100%);
   border-radius: var(--radius);
-  margin-bottom: 8px;
+  margin-bottom: 12px;
   transition: var(--transition);
   border-left: 4px solid transparent;
+  box-shadow: var(--shadow-sm);
+  position: relative;
+  overflow: hidden;
+}
+
+.todo-item::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 4px;
+  background: linear-gradient(180deg, var(--primary) 0%, var(--accent) 100%);
+  opacity: 0;
+  transition: opacity 0.3s ease;
 }
 
 .todo-item:hover {
-  background: #f3f4f6;
-  transform: translateX(4px);
+  background: linear-gradient(135deg, rgba(255, 255, 255, 1) 0%, rgba(245, 240, 255, 1) 100%);
+  transform: translateX(6px) scale(1.01);
+  box-shadow: var(--shadow-md);
+}
+
+.todo-item:hover::before {
+  opacity: 1;
 }
 
 /* Checkbox toggle button */
 .todo-checkbox {
-  width: 24px;
-  height: 24px;
-  min-width: 24px;
-  border-radius: 6px;
-  border: 2px solid var(--border);
+  width: 28px;
+  height: 28px;
+  min-width: 28px;
+  border-radius: 8px;
+  border: 3px solid var(--border);
   background: var(--bg);
   color: white;
   cursor: pointer;
@@ -175,17 +325,28 @@ h1 {
   justify-content: center;
   font-weight: bold;
   transition: var(--transition);
+  font-size: 16px;
+  position: relative;
 }
 
 .todo-checkbox:hover {
   border-color: var(--primary);
+  transform: scale(1.1);
+  box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.1);
 }
 
 /* Checkbox checked state */
 .todo-checkbox.checked {
-  background: var(--success);
+  background: linear-gradient(135deg, var(--success) 0%, var(--success-light) 100%);
   border-color: var(--success);
-  box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.1);
+  box-shadow: 0 0 0 4px rgba(16, 185, 129, 0.15), var(--shadow-sm);
+  animation: checkPop 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+}
+
+@keyframes checkPop {
+  0% { transform: scale(0.8); }
+  50% { transform: scale(1.15); }
+  100% { transform: scale(1); }
 }
 
 /* Todo text label */
@@ -222,29 +383,42 @@ h1 {
   border: none;
   color: var(--text-secondary);
   cursor: pointer;
-  padding: 6px 10px;
-  border-radius: 6px;
+  padding: 8px 12px;
+  border-radius: 8px;
   font-size: 18px;
-  transition: var(--transition);
+  transition: var(--transition-fast);
   display: flex;
   align-items: center;
   justify-content: center;
+  position: relative;
+}
+
+.icon-btn::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 8px;
+  opacity: 0;
+  transition: opacity 0.3s ease;
 }
 
 .icon-btn:hover {
-  background: #fee2e2;
+  background: linear-gradient(135deg, #fee2e2 0%, #fecaca 100%);
   color: var(--danger);
-  transform: scale(1.1);
+  transform: scale(1.15) rotate(5deg);
+  box-shadow: 0 4px 12px rgba(239, 68, 68, 0.2);
 }
 
 /* Specific styling for edit icon button to avoid delete hover color */
 .icon-btn.edit-btn {
   color: var(--text-secondary);
 }
+
 .icon-btn.edit-btn:hover {
-  background: rgba(59, 130, 246, 0.08);
-  color: var(--primary-dark);
-  transform: scale(1.06);
+  background: linear-gradient(135deg, rgba(99, 102, 241, 0.1) 0%, rgba(236, 72, 153, 0.1) 100%);
+  color: var(--primary);
+  transform: scale(1.15) rotate(-5deg);
+  box-shadow: 0 4px 12px rgba(99, 102, 241, 0.2);
 }
 
 /* Todo panel */
@@ -266,21 +440,45 @@ h1 {
   background: transparent;
   border: 2px solid var(--danger);
   color: var(--danger);
-  padding: 8px 12px;
+  padding: 10px 18px;
   border-radius: var(--radius);
   cursor: pointer;
-  font-weight: 600;
-  font-size: 14px;
+  font-weight: 700;
+  font-size: 13px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
   transition: var(--transition);
+  position: relative;
+  overflow: hidden;
+}
+
+.clear-btn::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, var(--danger) 0%, #dc2626 100%);
+  opacity: 0;
+  transition: opacity 0.3s ease;
 }
 
 .clear-btn:hover {
-  background: #fee2e2;
-  transform: translateY(-2px);
+  color: white;
+  border-color: var(--danger);
+  transform: translateY(-3px);
+  box-shadow: var(--shadow-md), 0 0 20px rgba(239, 68, 68, 0.3);
+}
+
+.clear-btn:hover::before {
+  opacity: 1;
 }
 
 .clear-btn:active {
-  transform: translateY(0);
+  transform: translateY(-1px);
+}
+
+.clear-btn span {
+  position: relative;
+  z-index: 1;
 }
 
 /* Footer section with controls */
@@ -299,7 +497,11 @@ h1 {
 .todo-count {
   font-size: 14px;
   color: var(--text-secondary);
-  font-weight: 600;
+  font-weight: 700;
+  padding: 8px 16px;
+  background: linear-gradient(135deg, rgba(99, 102, 241, 0.08) 0%, rgba(236, 72, 153, 0.08) 100%);
+  border-radius: 20px;
+  border: 1px solid rgba(99, 102, 241, 0.2);
 }
 
 /* Filter buttons group */
@@ -315,41 +517,55 @@ h1 {
 .filter-btn {
   background: transparent;
   border: none;
-  padding: 8px 12px;
-  border-radius: 6px;
+  padding: 10px 16px;
+  border-radius: 8px;
   cursor: pointer;
   color: var(--text-secondary);
-  font-weight: 600;
-  font-size: 14px;
-  transition: var(--transition);
+  font-weight: 700;
+  font-size: 13px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  transition: var(--transition-fast);
+  position: relative;
 }
 
 .filter-btn:hover {
   color: var(--primary);
+  background: rgba(99, 102, 241, 0.08);
+  transform: translateY(-2px);
 }
 
 /* Active filter button styling */
 .filter-btn.active {
-  background: var(--primary);
+  background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
   color: white;
-  box-shadow: var(--shadow-sm);
+  box-shadow: var(--shadow-md), 0 0 15px rgba(99, 102, 241, 0.4);
+  transform: scale(1.05);
+}
+
+.filter-btn.active:hover {
+  transform: scale(1.05);
 }
 
 /* Inline edit input field */
 .edit-input {
   width: 100%;
-  padding: 12px 14px;
+  padding: 14px 16px;
   font-size: 16px;
-  border-radius: 6px;
-  border: 2px solid var(--primary);
+  border-radius: 10px;
+  border: 3px solid transparent;
+  background: linear-gradient(white, white) padding-box,
+              linear-gradient(135deg, var(--primary), var(--accent)) border-box;
   outline: none;
-  background: var(--bg);
   color: var(--text-primary);
-  font-weight: 500;
+  font-weight: 600;
+  transition: var(--transition);
+  box-shadow: var(--shadow-md);
 }
 
 .edit-input:focus {
-  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
+  box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.2), var(--shadow-lg);
+  transform: scale(1.02);
 }
 
 /* Mobile responsive styles */
